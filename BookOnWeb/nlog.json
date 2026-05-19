@@ -1,0 +1,83 @@
+{
+  "NLog": {
+    "variables": {
+      "baseFileDir": "${basedir}\\..\\App_Logs",
+      "layoutCompact": "[${longdate}] [${level:uppercase=true}] [${callsite}] ${message} ${exception:format=tostring,data:maxInnerExceptionLevel=10:separator=\r\n}",
+      "layout": "[${longdate}] [${level:uppercase=true}] [${callsite}] ${message} ${exception:format=tostring,data:maxInnerExceptionLevel=10:separator=\r\n} ${newline}   URL: ${aspnet-request-url} ${newline}   REQUEST-QUERYSTRING: ${aspnet-Request-QueryString} ${newline}   ACTION: ${aspnet-mvc-controller}-${aspnet-mvc-action} ${newline}   HOST: ${aspnet-Request-Host} ${newline}   REQUEST-METHOD: ${aspnet-Request-Method} ${newline}   REQUEST-REFERRER: ${aspnet-Request-Referrer} ${newline}   REQUEST-USERAGENT: ${aspnet-Request-UserAgent} ${newline}   SESSION_ID: ${aspnet-SessionId} ${newline}   TRACE_IDENTIFIER: ${aspnet-TraceIdentifier} ${newline}"
+    },
+    "internalLogLevel": "Info",
+    "internalLogFile": "C:\\NLog\\bookonweb.txt",
+    "extensions": [
+      { "assembly": "NLog.Extensions.Logging" },
+      { "assembly": "NLog.Web.AspNetCore" }
+    ],
+    "throwConfigExceptions": false,
+    "targets": {
+      "async": true,
+      "errorTarget": {
+        "name": "errors",
+        "type": "File",
+        "fileName": "${baseFileDir}\\NLog\\error.txt",
+        "archiveFileName": "${baseFileDir}\\NLog_Archive\\{#}.error.txt",
+        "layout": "${layout}",
+        "archiveEvery": "Day",
+        "archiveNumbering": "DateAndSequence",
+        "archiveAboveSize": "52428800",
+        "archiveDateFormat": "yyyy-MM-dd",
+        "maxArchiveFiles": "30"
+      },
+      "warnTarget": {
+        "name": "warns",
+        "type": "File",
+        "fileName": "${baseFileDir}\\NLog\\warn.txt",
+        "archiveFileName": "${baseFileDir}\\NLog_Archive\\{#}.warn.txt",
+        "layout": "${layoutCompact}",
+        "archiveEvery": "Day",
+        "archiveNumbering": "DateAndSequence",
+        "archiveAboveSize": "52428800",
+        "archiveDateFormat": "yyyy-MM-dd",
+        "maxArchiveFiles": "30"
+      },
+      "infoTarget": {
+        "name": "infos",
+        "type": "File",
+        "fileName": "${baseFileDir}\\NLog\\info.txt",
+        "archiveFileName": "${baseFileDir}\\NLog_Archive\\{#}.info.txt",
+        "layout": "${layoutCompact}",
+        "archiveEvery": "Day",
+        "archiveNumbering": "DateAndSequence",
+        "archiveAboveSize": "52428800",
+        "archiveDateFormat": "yyyy-MM-dd",
+        "maxArchiveFiles": "30"
+      }
+    },
+    "rules": [
+
+      // Regole generiche per tutti (NON devono bloccare le altre)
+      {
+        "logger": "*",
+        "minLevel": "Fatal",
+        "writeTo": "errorTarget",
+        "final": true
+      },
+      {
+        "logger": "*",
+        "minLevel": "Error",
+        "writeTo": "errorTarget",
+        "final": true
+      },
+      {
+        "logger": "*",
+        "minLevel": "Warn",
+        "writeTo": "warnTarget",
+        "final": false
+      },
+      {
+        "logger": "*",
+        "minLevel": "Info",
+        "writeTo": "infoTarget",
+        "final": false
+      }
+    ]
+  }
+}
