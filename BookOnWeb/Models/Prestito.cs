@@ -21,7 +21,7 @@ namespace BookOnWeb.Models
         [MaxLength(100), EmailAddress] // indica che la stringa deve essere un indirizzo email valido
         public string? Email { get; set; }
 
-        [MaxLength(30)]
+        [Required, MaxLength(30)]
         public string Cellulare { get; set; } = null!;
 
         [Column(TypeName = "datetime")] // specifica che la colonna nel database deve essere di tipo datetime (con data e orario)

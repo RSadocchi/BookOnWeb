@@ -1,7 +1,8 @@
 ﻿using BookOnWeb.Data;
+using BookOnWeb.Domain.Interfaces;
 using BookOnWeb.Models;
 
-namespace BookOnWeb.Domain.Interfaces
+namespace BookOnWeb.Domain.Implementations
 {
     public class LibroRepository : Repository<Libro, int>, ILibroRepository
     {
@@ -9,7 +10,5 @@ namespace BookOnWeb.Domain.Interfaces
         {
             
         }
-
-
     }
 }

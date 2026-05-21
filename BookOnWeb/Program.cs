@@ -1,6 +1,9 @@
 using BookOnWeb.Data;
+using BookOnWeb.Domain.Implementations;
+using BookOnWeb.Domain.Interfaces;
 using BookOnWeb.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NLog;
 using NLog.Web;
 
@@ -29,11 +32,15 @@ try
 
     builder.Services.AddDbContext<AppDbContext>(o =>
         o.UseSqlServer(
-            builder.Configuration.GetConnectionString("Default"),
+            builder.Configuration.GetConnectionString("Application"),
             opt => opt.MigrationsAssembly(typeof(Program).Assembly.GetName().Name))
     );
 
-    builder.Services.AddSingleton<IConfiguration>(provider => builder.Configuration);
+    builder.Services.TryAddSingleton<IConfiguration>(provider => builder.Configuration);
+
+    builder.Services.TryAddScoped<ILibroRepository, LibroRepository>();
+    builder.Services.TryAddScoped<IAutoreRepository, AutoreRepository>();
+    builder.Services.TryAddScoped<IAppService, AppService>();
 
     // Add services to the container.
     builder.Services.AddControllersWithViews();
@@ -45,7 +52,7 @@ try
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
-        app.UseExceptionHandler("/Home/Error");
+        app.UseExceptionHandler("/error");
         // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
@@ -55,7 +62,7 @@ try
             using (var ctx = serviceScoped.ServiceProvider.GetService<AppDbContext>())
                 if (ctx is not null)
                 {
-                    ctx.ConnectionString = builder.Configuration.GetConnectionString("Default")!;
+                    ctx.ConnectionString = builder.Configuration.GetConnectionString("Application")!;
                     ctx.Database.Migrate();
                 }
 

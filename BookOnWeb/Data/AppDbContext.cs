@@ -18,7 +18,7 @@ namespace BookOnWeb.Data
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .AddJsonFile($"appsettings.{env}.json", optional: true, reloadOnChange: true)
                     .Build();
-                ConnectionString = configuration.GetConnectionString("Default") ?? throw new ArgumentNullException(nameof(ConnectionString), "Connection string 'Default' is not configured.");
+                ConnectionString = configuration.GetConnectionString("Application") ?? throw new ArgumentNullException(nameof(ConnectionString), "Connection string 'Default' is not configured.");
             }
         }
 
