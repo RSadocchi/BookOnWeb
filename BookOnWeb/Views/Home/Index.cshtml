@@ -2,6 +2,31 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .card-header {
+        font-weight: 700;
+    }
+
+    .--counter {
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+        .--counter .--doppio {
+            font-size: 3rem;
+        }
+
+            .--counter .--doppio small {
+                font-size: .75rem;
+                text-transform: uppercase;
+            }
+
+    .card-footer {
+        background-color: transparent !important;
+    }
+</style>
+
 <div class="text-center">
     <h1 class="display-4">Benvenuto</h1>
     <p>
@@ -25,17 +50,107 @@
 <p>
     Praticamente effettuo <em>n</em> chiamate HTTP alle API dopo che la pagina &egrave; stata caricata completamente.
 </p>
-<div class="row justify-content-around align-items-center">
-
+<div class="row justify-content-around align-items-stretch">
+    <div class="card col-sm-3 h-auto">
+        <div class="card-header">
+            <i class="fa-solid fa-book fa-xl me-2"></i>
+            Libri
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column justify-content-center align-items-center m-3 p-3 mt-1 pt-1 h-100" id="booksCountContainer">
+                <div class="spinner-border text-secondary"></div>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <i class="fa-solid fa-plus fa-xl ms-2 c-pointer"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square fa-xl ms-2 c-pointer"></i>
+        </div>
+    </div>
+    <div class="card col-sm-3 h-auto">
+        <div class="card-header">
+            <i class="fa-solid fa-address-book fa-xl me-2"></i>
+            Autori
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column justify-content-center align-items-center m-3 p-3 mt-1 pt-1 h-100" id="authorsCountContainer">
+                <div class="spinner-border text-secondary"></div>
+            </div>
+        </div>
+        <div class="card-footer">Footer</div>
+    </div>
+    <div class="card col-sm-3 h-auto">
+        <div class="card-header">
+            <i class="fa-solid fa-square-share-nodes fa-xl me-2"></i>
+            Libri prestati
+        </div>
+        <div class="card-body">
+            <div class="d-flex flex-column justify-content-center align-items-center m-3 p-3 mt-1 pt-1 h-100" id="sharedCountContainer">
+                <div class="spinner-border text-secondary"></div>
+            </div>
+        </div>
+        <div class="card-footer">Footer</div>
+    </div>
 </div>
 
 @section Scripts {
 
-
-
     <script type="text/javascript">
+
+        function booksCount() {
+            $.ajax({
+                url:'/ajax/books-count',
+                method: 'get',
+                success: (data) => {
+                    $('#booksCountContainer')
+                        .html(!!data && data || 0)
+                        .addClass('--counter text-primary');
+                },
+                error: (error) => {
+
+                }
+            });
+        }
+
+        function authorsCount() {
+            $.ajax({
+                url:'/ajax/authors-count',
+                method: 'get',
+                success: (data) => {
+                    $('#authorsCountContainer')
+                        .html(!!data && data || 0)
+                        .addClass('--counter text-primary');
+                },
+                error: (error) => {
+
+                }
+            });
+        }
+
+        function sharedCount() {
+            $.ajax({
+                url:'/ajax/shared-count',
+                method: 'get',
+                success: (data) => {
+                    let _active = !!data && !!data.active && data.active || 0;
+                    let _done = !!data && !!data.done && data.done || 0;
+
+                    let _activeElement = `<span class="--doppio col-sm-5 text-center">${_active}<small class="d-block text-center">fuori</small></span>`;
+                    let _doneElement = `<span class="--doppio col-sm-5 text-center">${_done}<small class="d-block text-center">rientrati</small></span>`;
+
+                    $('#sharedCountContainer')
+                        .html(`<div class="d-flex flex-row justify-content-around align-items-center w-100">${_activeElement}${_doneElement}</div>`)
+                        .addClass('--counter text-primary mx-1 px-1');
+                },
+                error: (error) => {
+
+                }
+            });
+        }
+
         $(function () {
-          console.log('lkjlkjlkj')
+          booksCount();
+          authorsCount();
+          sharedCount();
         });
     </script>
 
