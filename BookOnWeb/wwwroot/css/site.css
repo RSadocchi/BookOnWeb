@@ -37,3 +37,23 @@ body {
 i.c-pointer:hover {
     color: rgb(13,110,253);
 }
+
+.--fieldset-form {
+    max-width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom:1.5rem;
+    padding-right: 12px;
+    padding-left: 12px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+}
+
+.--fieldset-form-action {
+    max-width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 1.5rem;
+    padding-right: 12px;
+    padding-left: 12px;
+}

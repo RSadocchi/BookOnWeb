@@ -1,0 +1,55 @@
+﻿@model AutoreDTO
+@{
+}
+
+<form id="authorForm" name="authorForm" method="post" asp-antiforgery="true" class="my-3">
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="NrLibri" type="hidden" />
+
+
+    <fieldset class="--fieldset-form">
+        <h3 class="text-primary mt-3">
+            @if (Model.Id > 0)
+            {
+                <span>Modifica autore</span>
+            }
+            else
+            {
+                <span>Nuovo autore</span>
+            }
+        </h3>
+
+        <div class="my-3">
+            <label asp-for="Nome" class="form-label">Nome<sup class="text-danger">*</sup></label>
+            <input asp-for="Nome" class="form-control" />
+        </div>
+        <div class="my-3">
+            <label asp-for="Cognome" class="form-label">Cognome<sup class="text-danger">*</sup></label>
+            <input asp-for="Cognome" class="form-control" />
+        </div>
+    
+        <hr />
+        <div class="d-flex flex-row justify-content-between align-items-center mb-3">
+            <div class="col-sm text-secondary">
+                <small>
+                    <em>
+                        Nr. libri all&rsquo;attivo <strong>@Model.NrLibri</strong>
+                    </em>
+                </small>
+            </div>
+            <div>
+                <button type="reset" class="btn btn-outline-dark ms-3">Annulla</button>
+                <button type="button" class="btn btn-primary ms-3" onclick="salvaAutore(event)">Salva</button>
+            </div>
+        </div>
+
+    </fieldset>
+
+</form>
+
+<script>
+    function salvaAutore(evt) {
+        let dd = $('#authorForm').serialize();
+        alert(dd);
+    }
+</script>
