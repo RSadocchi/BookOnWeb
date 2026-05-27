@@ -76,7 +76,10 @@
                 <div class="spinner-border text-secondary"></div>
             </div>
         </div>
-        <div class="card-footer">Footer</div>
+        <div class="card-footer text-end">
+            <i class="fa-solid fa-plus fa-xl ms-2 c-pointer" onclick="authorEdit()"></i>
+            <i class="fa-solid fa-arrow-up-right-from-square fa-xl ms-2 c-pointer" onclick="navigate('/author')"></i>
+        </div>
     </div>
     <div class="card col-sm-3 h-auto">
         <div class="card-header">
@@ -96,6 +99,16 @@
 
     <script type="text/javascript">
 
+        document.getElementById('modalGlobal').addEventListener('hide.bs.modal', event => {
+            booksCount();
+            authorsCount();
+            sharedCount();
+        });
+
+        function navigate(url) {
+            location.href = url;
+        }
+
         function booksCount() {
             $.ajax({
                 url:'/ajax/books-count',
@@ -106,7 +119,10 @@
                         .addClass('--counter text-primary');
                 },
                 error: (error) => {
-
+                    console.log(error);
+                    $('#booksCountContainer')
+                        .html(0)
+                        .addClass('--counter text-secondary');
                 }
             });
         }
@@ -121,7 +137,10 @@
                         .addClass('--counter text-primary');
                 },
                 error: (error) => {
-
+                    console.log(error);
+                    $('#authorsCountContainer')
+                        .html(0)
+                        .addClass('--counter text-secondary');
                 }
             });
         }
@@ -142,7 +161,10 @@
                         .addClass('--counter text-primary mx-1 px-1');
                 },
                 error: (error) => {
-
+                    console.log(error);
+                    $('#sharedCountContainer')
+                        .html(0)
+                        .addClass('--counter text-secondary');
                 }
             });
         }

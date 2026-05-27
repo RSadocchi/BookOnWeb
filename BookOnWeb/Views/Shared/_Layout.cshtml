@@ -12,6 +12,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="~/favicon/favicon-96x96.png">
     <link rel="manifest" href="~/favicon/site.webmanifest">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/sweetalert2/sweetalert2.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
@@ -44,6 +45,25 @@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+
+        <div class="modal fade" id="modalGlobal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header" id="modalHeader">
+                        <h4 class="modal-title me-auto" id="modalTitle"></h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="modal-body" id="modalBody"></div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer" id="modalFooter">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <footer class="border-top footer text-muted">
@@ -53,7 +73,37 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/sweetalert2/sweetalert2.all.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+
+        document.getElementById('modalGlobal').addEventListener('hidden.bs.modal', event => {
+            $('#modalTitle').html('');
+            $('#modalBody').html('');
+        });
+
+        function authorEdit(id) {
+            $.ajax({
+                url:`/author/edit/${(!!id && +id || 0)}`,
+                method:'get',
+                success: (data) => {
+                    $('#modalTitle').html('Nuovo Autore');
+                    $('#modalFooter').hide();
+                    $('#modalBody').html(data);
+                    $('#modalGlobal').modal('show');
+                },
+                error: (error) => {
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: 'Si è verificato un errore',
+                        icon: 'error',
+                        confirmButtonText: 'Chiudi'
+                    });
+                }
+            });
+        }
+
+    </script>
 </body>
 </html>

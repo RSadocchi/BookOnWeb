@@ -1,0 +1,62 @@
+﻿@model List<AutoreDTO>
+@{
+}
+<div class="d-flex flex-column justify-content-start align-items-stretch">
+    <div class="text-end mb-3">
+        <button type="button" class="btn btn-outline-info" onclick="authorEdit()">
+            <i class="fa-solid fa-plus fa-lg"></i>
+            Nuovo
+        </button>
+    </div>
+    <table id="authorList" class="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th width="50"> </th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th width="125">Nr. libri</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model?.Count > 0)
+            {
+                foreach (var m in Model)
+                {
+                    <tr>
+                        <td width="50">
+                            <i class="fa-solid fa-user-edit fa-xl ms-2 c-pointer" onclick="authorEdit(@m.Id)"></i>
+                        </td>
+                        <td>
+                            @m.Nome
+                        </td>
+                        <td>
+                            @m.Cognome
+                        </td>
+                        <td width="125">
+                            @m.NrLibri
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center">
+                        <em>
+                            Nessun risultato
+                        </em>
+                    </td>
+                </tr>
+            }
+            
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('modalGlobal').addEventListener('hide.bs.modal', event => {
+            location.reload();
+        });
+    </script>
+}

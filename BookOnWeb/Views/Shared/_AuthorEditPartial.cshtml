@@ -2,13 +2,19 @@
 @{
 }
 
-<form id="authorForm" name="authorForm" method="post" asp-antiforgery="true" class="my-3">
+<div class="--loader" id="loaderAuthorEdit">
+    <div class="spinner-border spinner-border-xxl text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<form id="authorForm" name="authorForm" method="post" asp-antiforgery="true"|>
     <input asp-for="Id" type="hidden" />
     <input asp-for="NrLibri" type="hidden" />
 
 
     <fieldset class="--fieldset-form">
-        <h3 class="text-primary mt-3">
+        @* <h3 class="text-primary mt-3">
             @if (Model.Id > 0)
             {
                 <span>Modifica autore</span>
@@ -17,7 +23,7 @@
             {
                 <span>Nuovo autore</span>
             }
-        </h3>
+        </h3> *@
 
         <div class="my-3">
             <label asp-for="Nome" class="form-label">Nome<sup class="text-danger">*</sup></label>
@@ -49,7 +55,46 @@
 
 <script>
     function salvaAutore(evt) {
-        let dd = $('#authorForm').serialize();
-        alert(dd);
+        if (evt) evt.preventDefault();
+
+        let _form = $('#authorForm').serialize();
+        $('#loaderAuthorEdit').show();
+        $.ajax({
+            url:'/author/edit',
+            method:'post',
+            data: _form,
+            success: (res) => {
+                $('#loaderAuthorEdit').hide();
+                if (!!res && res.succeeded == true) {
+                    Swal.fire({
+                        title: 'Eureka!',
+                        text: 'Salvataggio effettuato!',
+                        icon: 'success',
+                        confirmButtonText: 'Chiudi'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: 'Si è verificato un errore! ' + res.message,
+                        icon: 'error',
+                        confirmButtonText: 'Chiudi'
+                    });
+                }
+            },
+            error: (err) => {
+                console.log(err);
+                $('#loaderAuthorEdit').hide();
+                Swal.fire({
+                    title: 'Oops...',
+                    text: 'Si è verificato un errore!',
+                    icon: 'error',
+                    confirmButtonText: 'Chiudi'
+                });
+            }
+        });
     }
+
+    $(function(){
+        $('#loaderAuthorEdit').hide();
+    })
 </script>
