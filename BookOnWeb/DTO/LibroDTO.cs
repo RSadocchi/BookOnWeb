@@ -8,8 +8,8 @@
         public string? Trama { get; set; }
         public int? AnnoPubblicazione { get; set; }
 
-        public string AutoreNome { get; set; } = null!;
-        public string AutoreCognome { get; set; } = null!;
+        public string? AutoreNome { get; set; }
+        public string? AutoreCognome { get; set; }
         public int NrCopieInPrestito { get; set; }
     }
 }

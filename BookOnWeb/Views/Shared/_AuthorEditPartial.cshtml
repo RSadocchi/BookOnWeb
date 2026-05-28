@@ -8,23 +8,13 @@
     </div>
 </div>
 
-<form id="authorForm" name="authorForm" method="post" asp-antiforgery="true"|>
+<form id="authorForm" name="authorForm" method="post" asp-antiforgery="true">
     <input asp-for="Id" type="hidden" />
     <input asp-for="NrLibri" type="hidden" />
 
 
     <fieldset class="--fieldset-form">
-        @* <h3 class="text-primary mt-3">
-            @if (Model.Id > 0)
-            {
-                <span>Modifica autore</span>
-            }
-            else
-            {
-                <span>Nuovo autore</span>
-            }
-        </h3> *@
-
+        
         <div class="my-3">
             <label asp-for="Nome" class="form-label">Nome<sup class="text-danger">*</sup></label>
             <input asp-for="Nome" class="form-control" />

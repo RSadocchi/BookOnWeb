@@ -1,5 +1,99 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model LibroDTO
+@inject IAppService _appService
 @{
+    List<SelectListItem> autoriList = (await _appService.Autori_GetAsync()).Select(x => new SelectListItem($"{x.Nome} {x.Cognome}", x.Id.ToString())).ToList();
+    autoriList.Insert(0, new SelectListItem("---Selezione un autore---", ""));
 }
+
+<div class="--loader" id="loaderBookEdit">
+    <div class="spinner-border spinner-border-xxl text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<form id="bookForm" name="bookForm" method="post" asp-antiforgery="true">
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="NrCopieInPrestito" type="hidden" />
+
+
+    <fieldset class="--fieldset-form">
+        <div class="my-3">
+            <label asp-for="Titolo" class="form-label">Titolo<sup class="text-danger">*</sup></label>
+            <input asp-for="Titolo" class="form-control" />
+        </div>
+        <div class="my-3">
+            <label asp-for="AutoreId" class="form-label">Autore<sup class="text-danger">*</sup></label>
+            <select asp-for="AutoreId" asp-items="autoriList" class="form-control"></select>
+        </div>
+        <div class="my-3">
+            <label asp-for="Trama" class="form-label">Trama</label>
+            <textarea asp-for="Trama" rows="5" cols="30" class="form-control"></textarea>
+        </div>
+        <div class="my-3">
+            <label asp-for="AnnoPubblicazione" class="form-label">Anno di pubblicazione</label>
+            <input asp-for="AnnoPubblicazione" class="form-control" type="text" maxlength="4" inputmode="numeric" />
+        </div>
+        <hr />
+        <div class="d-flex flex-row justify-content-between align-items-center mb-3">
+            <div class="col-sm text-secondary">
+                <small>
+                    <em>
+                        Nr. libri prestati <strong>@Model.NrCopieInPrestito</strong>
+                    </em>
+                </small>
+            </div>
+            <div>
+                <button type="reset" class="btn btn-outline-dark ms-3">Annulla</button>
+                <button type="button" class="btn btn-primary ms-3" onclick="salvaLibro(event)">Salva</button>
+            </div>
+        </div>
+
+    </fieldset>
+
+</form>
+
+<script>
+    function salvaLibro(evt) {
+        if (evt) evt.preventDefault();
+
+        let _form = $('#bookForm').serialize();
+        $('#loaderBookEdit').show();
+        $.ajax({
+            url:'/book/edit',
+            method:'post',
+            data: _form,
+            success: (res) => {
+                $('#loaderBookEdit').hide();
+                if (!!res && res.succeeded == true) {
+                    Swal.fire({
+                        title: 'Eureka!',
+                        text: 'Salvataggio effettuato!',
+                        icon: 'success',
+                        confirmButtonText: 'Chiudi'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: 'Si è verificato un errore! ' + res.message,
+                        icon: 'error',
+                        confirmButtonText: 'Chiudi'
+                    });
+                }
+            },
+            error: (err) => {
+                console.log(err);
+                $('#loaderBookEdit').hide();
+                Swal.fire({
+                    title: 'Oops...',
+                    text: 'Si è verificato un errore!',
+                    icon: 'error',
+                    confirmButtonText: 'Chiudi'
+                });
+            }
+        });
+    }
+
+    $(function(){
+        $('#loaderBookEdit').hide();
+    })
+</script>
