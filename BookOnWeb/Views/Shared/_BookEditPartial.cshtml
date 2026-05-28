@@ -31,7 +31,7 @@
         </div>
         <div class="my-3">
             <label asp-for="AnnoPubblicazione" class="form-label">Anno di pubblicazione</label>
-            <input asp-for="AnnoPubblicazione" class="form-control" type="text" maxlength="4" inputmode="numeric" />
+            <input asp-for="AnnoPubblicazione" class="form-control" type="text" maxlength="4" max="@DateTime.Today.Year" inputmode="numeric" />
         </div>
         <hr />
         <div class="d-flex flex-row justify-content-between align-items-center mb-3">
@@ -53,6 +53,19 @@
 </form>
 
 <script>
+
+    const annoCorrente = new Date().getFullYear();
+    $('#AnnoPubblicazione').on('change', function() {
+        // Rimuove tutto ciò che non è cifra
+        let val = $(this).val().replace(/\D/g, '');
+        $(this).val(val);
+
+        // Non superi l'anno corrente
+        if (val.length === 4 && parseInt(val) > annoCorrente) {
+            $(this).val(annoCorrente);
+        }
+    });
+
     function salvaLibro(evt) {
         if (evt) evt.preventDefault();
 
