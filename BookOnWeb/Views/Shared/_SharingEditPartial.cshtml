@@ -1,0 +1,135 @@
+﻿@model PrestitoDTO
+@inject IAppService _appService
+@{
+    List<SelectListItem> bookList = (await _appService.Libri_GetAsync()).Select(x => new SelectListItem(x.Titolo, x.Id.ToString())).OrderBy(x => x.Text).ToList();
+    bookList.Insert(0, new SelectListItem("---Selezione un libro---", ""));
+}
+
+<div class="--loader" id="loaderSharingEdit">
+    <div class="spinner-border spinner-border-xxl text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
+<form id="sharingForm" name="sharingForm" method="post" asp-antiforgery="true">
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="DataPrestito" type="hidden" value="@Model.DataPrestito.ToString("yyyy-MM-dd")" />
+    <input asp-for="DataRestituzione" type="hidden" value="@Model.DataRestituzione?.ToString("yyyy-MM-dd")" />
+
+    <fieldset class="--fieldset-form">
+        <div class="my-3">
+            <label asp-for="LibroId" class="form-label">Libro<sup class="text-danger">*</sup></label>
+            <select asp-for="LibroId" asp-items="bookList" class="form-control"></select>
+        </div>
+        <div class="my-3">
+            <label asp-for="NomeUtente" class="form-label">Nome completo persona<sup class="text-danger">*</sup></label>
+            <input asp-for="NomeUtente" class="form-control" />
+        </div>
+        <div class="my-3">
+            <label asp-for="Cellulare" class="form-label">Cellulare<sup class="text-danger">*</sup></label>
+            <input asp-for="Cellulare" class="form-control" type="text" maxlength="12" inputmode="numeric" />
+        </div>
+        <div class="my-3">
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" type="email" class="form-control" />
+        </div>
+        <div class="my-3">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="restituitoSwitch" @(Model.DataRestituzione.HasValue ? " checked " : "")>
+                <label class="form-check-label" for="restituitoSwitch">Restituito <strong id="restituitoSwitchLabel"></strong></label>
+            </div>
+        </div>
+        <hr />
+        <div class="d-flex flex-row justify-content-between align-items-center mb-3">
+            <div class="col-sm d-flex flex-column text-secondary">
+                <small>
+                    <em>
+                        Data prestito <strong>@Model.DataPrestito.ToString("ddd dd MMM yyyy")</strong>
+                    </em>
+                </small>
+                @if (Model.DataRestituzione.HasValue)
+                {
+                    <small>
+                        <em>
+                            Data restituzione <strong>@Model.DataRestituzione.Value.ToString("ddd dd MMM yyyy")</strong>
+                        </em>
+                    </small>
+                }
+            </div>
+            <div>
+                <button type="reset" class="btn btn-outline-dark ms-3">Annulla</button>
+                <button type="button" class="btn btn-primary ms-3" onclick="salvaPrestito(event)">Salva</button>
+            </div>
+        </div>
+
+    </fieldset>
+
+</form>
+
+<script>
+
+    function switchChange(pageLoad) {
+        if (!pageLoad) {
+            if ($('#restituitoSwitch').is(':checked')) {
+                    $('#DataRestituzione').val('@DateTime.Today.ToString("yyyy-MM-dd")');
+            } else {
+                $('#DataRestituzione').val('');
+            }
+        }
+
+        if ($('#restituitoSwitch').is(':checked')) {
+            $('#restituitoSwitchLabel').html('SI');
+        } else {
+            $('#restituitoSwitchLabel').html('NO');
+        }
+    }
+
+    $('#restituitoSwitch').on('change', function(event, state) {
+      switchChange(false);
+    });
+
+    function salvaPrestito(evt) {
+        if (evt) evt.preventDefault();
+
+        let _form = $('#sharingForm').serialize();
+        $('#loaderSharingEdit').show();
+        $.ajax({
+            url:'/sharing/edit',
+            method:'post',
+            data: _form,
+            success: (res) => {
+                $('#loaderSharingEdit').hide();
+                if (!!res && res.succeeded == true) {
+                    Swal.fire({
+                        title: 'Eureka!',
+                        text: 'Salvataggio effettuato!',
+                        icon: 'success',
+                        confirmButtonText: 'Chiudi'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: 'Si è verificato un errore! ' + res.message,
+                        icon: 'error',
+                        confirmButtonText: 'Chiudi'
+                    });
+                }
+            },
+            error: (err) => {
+                console.log(err);
+                $('#loaderSharingEdit').hide();
+                Swal.fire({
+                    title: 'Oops...',
+                    text: 'Si è verificato un errore!',
+                    icon: 'error',
+                    confirmButtonText: 'Chiudi'
+                });
+            }
+        });
+    }
+
+    $(function(){
+        $('#loaderSharingEdit').hide();
+        switchChange(true);
+    })
+</script>

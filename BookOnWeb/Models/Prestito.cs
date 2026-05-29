@@ -24,8 +24,8 @@ namespace BookOnWeb.Models
         [Required, MaxLength(30)]
         public string Cellulare { get; set; } = null!;
 
-        [Column(TypeName = "datetime")] // specifica che la colonna nel database deve essere di tipo datetime (con data e orario)
-        public DateTime? DataRestituzione { get; set; }
+        [Column(TypeName = "date")]
+        public DateOnly? DataRestituzione { get; set; }
 
 
         public virtual Libro Libro { get; set; } = null!;

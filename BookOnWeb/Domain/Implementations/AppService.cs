@@ -322,7 +322,8 @@ namespace BookOnWeb.Domain.Implementations
             string? email = null,
             string? cellulare = null,
             int? libroId = null,
-            bool ricercaTestoEsatto = false)
+            bool ricercaTestoEsatto = false,
+            bool? aperti = null)
         {
             var query = _libroRepository.UnitOfWork.Prestiti.AsQueryable();
 
@@ -359,6 +360,9 @@ namespace BookOnWeb.Domain.Implementations
             if (libroId.HasValue)
                 query = query.Where(x => x.LibroId == libroId.Value);
 
+            if (aperti.HasValue)
+                query = query.Where(x => x.DataRestituzione.HasValue != aperti.GetValueOrDefault());
+
             return query.ToList();
         }
 
@@ -372,6 +376,8 @@ namespace BookOnWeb.Domain.Implementations
 
             if (dto.Id != entity.Id) throw new InvalidOperationException();
 
+            entity.LibroId = dto.LibroId;
+            entity.DataPrestito = dto.DataPrestito;
             entity.NomeUtente = dto.NomeUtente;
             entity.Email = dto.Email;
             entity.Cellulare = dto.Cellulare;

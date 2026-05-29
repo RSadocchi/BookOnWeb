@@ -21,7 +21,7 @@ namespace BookOnWeb.Domain.Interfaces
         
         #region Prestito
         Task<Prestito?> Prestiti_FindAsync(int id);
-        Task<List<Prestito>> Prestiti_GetAsync(int[]? ids = null, string? nomeUtente = null, string? email = null, string? cellulare = null, int? libroId = null, bool ricercaTestoEsatto = false);
+        Task<List<Prestito>> Prestiti_GetAsync(int[]? ids = null, string? nomeUtente = null, string? email = null, string? cellulare = null, int? libroId = null, bool ricercaTestoEsatto = false, bool? aperti = null);
         Task<Prestito> Prestiti_SaveAsync(Prestito entity);
         Task<Prestito> Prestiti_SaveAsync(PrestitoDTO dto);
         #endregion

@@ -36,6 +36,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Author" asp-action="Index">Autori</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Sharing" asp-action="Index">Prestiti</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -125,6 +128,26 @@
             });
         }
 
+        function sharingEdit(id) {
+            $.ajax({
+                url:`/sharing/edit/${(!!id && +id || 0)}`,
+                method:'get',
+                success: (data) => {
+                    $('#modalTitle').html('Nuovo prestito');
+                    $('#modalFooter').hide();
+                    $('#modalBody').html(data);
+                    $('#modalGlobal').modal('show');
+                },
+                error: (error) => {
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: 'Si è verificato un errore',
+                        icon: 'error',
+                        confirmButtonText: 'Chiudi'
+                    });
+                }
+            });
+        }
 
 
     </script>
