@@ -87,23 +87,23 @@
         });
 
         function bookEdit(id) {
-        $.ajax({
-            url:`/book/edit/${(!!id && +id || 0)}`,
-            method:'get',
-            success: (data) => {
-                $('#modalTitle').html('Nuovo Libro');
-                $('#modalFooter').hide();
-                $('#modalBody').html(data);
-                $('#modalGlobal').modal('show');
-            },
-            error: (error) => {
-                Swal.fire({
-                title: 'Oops...',
-                text: 'Si è verificato un errore',
-                icon: 'error',
-                confirmButtonText: 'Chiudi'
-                });
-            }
+            $.ajax({
+                url:`/book/edit/${(!!id && +id || 0)}`,
+                method:'get',
+                success: (data) => {
+                    $('#modalTitle').html('Nuovo Libro');
+                    $('#modalFooter').hide();
+                    $('#modalBody').html(data);
+                    $('#modalGlobal').modal('show');
+                },
+                error: (error) => {
+                    Swal.fire({
+                        title: 'Oops...',
+                        text: 'Si è verificato un errore',
+                        icon: 'error',
+                        confirmButtonText: 'Chiudi'
+                    });
+                }
             });
         }
 

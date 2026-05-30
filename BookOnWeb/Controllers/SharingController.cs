@@ -11,14 +11,17 @@ namespace BookOnWeb.Controllers
         IAppService _appService) : Controller
     {
         [HttpGet("")]
-        public async Task<IActionResult> List([FromQuery] bool? aperti = true)
+        public async Task<IActionResult> List() => View();
+
+        [HttpGet("table")]
+        public async Task<IActionResult> ListTable([FromQuery] bool? aperti = true)
         {
             var data = await _appService.Prestiti_GetAsync(aperti: aperti);
             List<PrestitoDTO> dtos = [];
             foreach (var d in data)
                 dtos.Add(_appService.MappaENTITYsuDTO(entity: d, dto: null));
 
-            return View(dtos.OrderBy(x => x.TitoloLibro).ToList());
+            return PartialView("ListaTablePartial", dtos.OrderBy(x => x.TitoloLibro).ToList());
         }
 
 

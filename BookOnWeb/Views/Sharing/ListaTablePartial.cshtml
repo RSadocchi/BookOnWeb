@@ -1,0 +1,50 @@
+﻿@model List<PrestitoDTO>
+@{
+}
+
+@if (Model?.Count > 0)
+{
+    foreach (var m in Model)
+    {
+        <tr>
+            <td width="50">
+                <i class="fa-solid fa-user-edit fa-xl ms-2 c-pointer" onclick="sharingEdit(@m.Id)"></i>
+            </td>
+            <td>
+                @m.TitoloLibro
+                <small class="d-block">
+                    <em>
+                        di @m.NomeCompletoAutore
+                    </em>
+                </small>
+            </td>
+            <td>
+                <span>@m.NomeUtente</span>
+                <span class="d-block">@m.Cellulare</span>
+                @if (!string.IsNullOrWhiteSpace(m.Email))
+                {
+                    <span class="d-block">
+                        <a href="mailto:@m.Email" target="_blank">@m.Email</a>
+                    </span>
+                }
+            </td>
+            <td>
+                <span class="d-block">Prestato @m.DataPrestito.ToString("ddd dd MMM yyyy")</span>
+                @if (m.DataRestituzione.HasValue)
+                {
+                    <span class="d-block">Restituito @m.DataRestituzione.GetValueOrDefault().ToString("ddd dd MMM yyyy")</span>
+                }
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="4" class="text-center">
+            <em>
+                Nessun risultato
+            </em>
+        </td>
+    </tr>
+}
